@@ -4,7 +4,7 @@
 SemaphoreHandle_t xSerialSemaphore;
 
 //Declarar los objetos de los sensores
-Sensor_t OjosDelante, OjosDetras;
+SensorA_t OjosDelante, OjosDetras;
 
 // Tareas
 void TaskOjosDelante( void *pvParameters );
@@ -24,7 +24,7 @@ void setup() {
       xSemaphoreGive( ( xSerialSemaphore ) );  
   }
 
-  // Now set up two Tasks to run independently.
+  // Crear las tareas de lectura de sensores
   xTaskCreate(TaskReadAnalog,"OjosDelante",128,(void*)&OjosDelante,2,NULL); 
   xTaskCreate(TaskReadAnalog,"OjosDetras",128,(void*)&OjosDetras,3,NULL); 
 }

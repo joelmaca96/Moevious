@@ -7,9 +7,17 @@
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h> 
 
-typedef struct Sensor_t{
-    uint8_t direccion;
+typedef struct SensorA_t{
+    uint8_t  direccion;
+    uint16_t cadencia = 100;
     uint32_t valor;
-} Sensor_t;
+
+} SensorA_t;
+
+typedef struct SensorD_t{
+    uint8_t  direccion;
+    uint16_t cadencia = 100;
+    bool valor;
+} SensorD_t;
 
 #endif

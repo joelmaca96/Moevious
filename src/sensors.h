@@ -5,6 +5,7 @@
 #include "Arduino.h"
 
 void TaskReadAnalog( void *pvParameters);
+void TaskReadDigital( void *pvParameters);
 
 
 #endif
