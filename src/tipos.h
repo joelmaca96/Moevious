@@ -20,4 +20,11 @@ typedef struct SensorD_t{
     bool valor;
 } SensorD_t;
 
+typedef struct SensorU_t{
+    uint8_t  direccionTrig;
+    uint8_t  direccionEcho;
+    uint16_t cadencia = 500;
+    uint32_t distancia;
+} SensorU_t;
+
 #endif

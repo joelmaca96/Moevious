@@ -4,7 +4,7 @@
 SemaphoreHandle_t xSerialSemaphore;
 
 //Declarar los objetos de los sensores
-SensorA_t OjosDelante, OjosDetras;
+SensorU_t OjosDelante, OjosDetras;
 
 // Tareas
 void TaskOjosDelante( void *pvParameters );
@@ -14,8 +14,10 @@ void setup() {
 
   Serial.begin(9600);
   
-  OjosDelante.direccion = A0;
-  OjosDetras.direccion = A1;
+  OjosDelante.direccionEcho = 1;
+  OjosDelante.direccionTrig = 2;
+  OjosDetras.direccionEcho = 3;
+  OjosDetras.direccionTrig = 4;
 
   //Arrancar el semaforo
   if ( xSerialSemaphore == NULL ){
@@ -25,15 +27,15 @@ void setup() {
   }
 
   // Crear las tareas de lectura de sensores
-  xTaskCreate(TaskReadAnalog,"OjosDelante",128,(void*)&OjosDelante,2,NULL); 
-  xTaskCreate(TaskReadAnalog,"OjosDetras",128,(void*)&OjosDetras,3,NULL); 
+  xTaskCreate(TaskUltrasonicRead,"OjosDelante",128,(void*)&OjosDelante,2,NULL); 
+  xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,3,NULL); 
 }
 
 void loop(){
   Serial.println("Ojos Delante");
-  Serial.println(OjosDelante.valor);
+  Serial.println(OjosDelante.distancia);
   Serial.println("Ojos Detras");
-  Serial.println(OjosDetras.valor);
+  Serial.println(OjosDetras.distancia);
   delay(1000);
 }
 

@@ -34,3 +34,35 @@ void TaskReadDigital( void *pvParameters){
     duerme(sensor->cadencia);
   }
 }
+
+/*--------------------------------------------------*/
+/*-----  Funciones para sensores especificos -------*/
+/*--------------------------------------------------*/
+
+/****************************************************************
+ * Función TaskUltrasonicRead
+ * Funcion pensada para ejecutarse como tarea.
+ * Lee un sensor de ultrasonidos HC-SR04
+ * params: SensorU_t --> Estructura del sensor a leer
+ ****************************************************************/
+void TaskUltrasonicRead (void *pvParameters){
+    SensorU_t * sensor = (SensorU_t *) pvParameters;
+
+    for (;;){
+        //Limpiar el estado del sensor
+        digitalWrite(sensor->direccionTrig, LOW);
+        delayMicroseconds(2);
+
+        //Activar el trigger
+        digitalWrite(sensor->direccionTrig, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(sensor->direccionTrig, LOW);
+
+
+        long tiempo = pulseIn(sensor->direccionEcho, HIGH);
+        //Distancia = tiempo *velocidad del sonido al propagarse por el aires /2 (Ida y vuelta))
+        sensor->distancia = tiempo * 0.034 / 2; 
+
+        duerme(sensor->cadencia);
+    }  
+}
