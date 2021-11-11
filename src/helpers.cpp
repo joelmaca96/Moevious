@@ -15,8 +15,9 @@ void duerme (int ms){
 
 /****************************************************************
  * Función escribe
- * Escribe por el puerto seriañ esperando que ninguna otra tarea
- * esté utilzando el puerto
+ * Escribe por el puerto serial esperando que ninguna otra tarea
+ * esté utilzando el puerto. Si tras 5 milisegundos el puerto no
+ * queda libre, vuelve sin escribir. 
  * params: value(int) --> valor a printar
  ****************************************************************/
 void escribe(int value){
@@ -46,9 +47,10 @@ void escribe(uint32_t value){
 
 /****************************************************************
  * Función escribe
- * Escribe por el puerto seriañ esperando que ninguna otra tarea
- * esté utilzando el puerto
- * params: value(String) --> cadena de texto a printar
+ * Escribe por el puerto serial esperando que ninguna otra tarea
+ * esté utilzando el puerto. Si tras 5 milisegundos el puerto no
+ * queda libre, vuelve sin escribir. 
+ * params: value(int) --> valor a printar
  ****************************************************************/
 void escribe(String value){
     if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
@@ -59,9 +61,10 @@ void escribe(String value){
 
 /****************************************************************
  * Función escribe
- * Escribe por el puerto seriañ esperando que ninguna otra tarea
- * esté utilzando el puerto
- * params: value(float) --> Valor com coma a printar
+ * Escribe por el puerto serial esperando que ninguna otra tarea
+ * esté utilzando el puerto. Si tras 5 milisegundos el puerto no
+ * queda libre, vuelve sin escribir. 
+ * params: value(int) --> valor a printar
  ****************************************************************/
 void escribe(float value){
     if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){

@@ -34,6 +34,9 @@ void setup() {
 }
 
 void loop(){
+
+  //En este proyecto el bucle loop no se utiliza
+  //Es sustituido por la tarea del RTOS "ControlTask"
 }
 
 /*--------------------------------------------------*/
