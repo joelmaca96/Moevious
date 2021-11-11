@@ -6,6 +6,9 @@ SemaphoreHandle_t xSerialSemaphore;
 //Declarar los objetos de los sensores
 SensorU_t OjosDelante, OjosDetras;
 
+//Declarar la clase de los motores
+Motores motors;
+
 // Prototipos de funciones
 void ControlTask (void *pvParameters);
 
@@ -50,8 +53,9 @@ void loop(){
  * params: Ninguno
  ****************************************************************/
 void ControlTask (void *pvParameters){
-
+  motors.MoverRecto(255, 1);
   for(;;){
+    
     Serial.println("Ojos Delante");
     Serial.println(OjosDelante.distancia);
     Serial.println("Ojos Detras");
