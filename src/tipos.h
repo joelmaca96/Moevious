@@ -8,6 +8,12 @@
 #include <semphr.h> 
 #include "motors.h"
 
+/*--------------------------------------------------*/
+/*----------- Defines de configuracion -------------*/
+/*--------------------------------------------------*/
+
+#define DEBUG   //Control de todo el output por el puerto serial
+
 typedef struct SensorA_t{
     uint8_t  direccion;
     uint16_t cadencia = 100;

@@ -1,8 +1,5 @@
 #include "tipos.h"
 
-// Semaforo para que dos tareas no accedan al serial a la vez
-SemaphoreHandle_t xSerialSemaphore;
-
 //Declarar los objetos de los sensores
 SensorU_t OjosDelante, OjosDetras;
 
