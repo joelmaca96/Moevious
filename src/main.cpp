@@ -21,13 +21,6 @@ void setup() {
   OjosDetras.direccionEcho  = 3;
   OjosDetras.direccionTrig  = 4;
 
-  //Arrancar el semaforo
-  if ( xSerialSemaphore == NULL ){
-    xSerialSemaphore = xSemaphoreCreateMutex();
-    if ( ( xSerialSemaphore ) != NULL )
-      xSemaphoreGive( ( xSerialSemaphore ) );  
-  }
-
   // Crear las tareas de lectura de sensores
   xTaskCreate(TaskUltrasonicRead,"OjosDelante",128,(void*)&OjosDelante,2,NULL); 
   xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,3,NULL); 
@@ -61,7 +54,7 @@ void ControlTask (void *pvParameters){
     Serial.println("Ojos Detras");
     Serial.println(OjosDetras.distancia);
     
-    duerme(100);
+    duerme(500);
   }
 }
 
