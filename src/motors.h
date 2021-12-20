@@ -1,5 +1,5 @@
 #ifndef __MOTORS_H
-#define __TIPOS_H
+#define __MOTORS_H
 
 #include "tipos.h"
 #include "Arduino.h"
