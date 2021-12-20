@@ -3,7 +3,6 @@
 extern ConfigData Configuracion;
 
 //Funciones privadas
-
 Uint8_t_Type check_uint8(const ConfigData Data1, const ConfigData Data2){
     if(Data1.fw_version.Value != Data2.fw_version.Value){
         return Data2.fw_version;
@@ -19,10 +18,6 @@ Uint8_t_Array_Type check_uint8_array(const ConfigData Data1, const ConfigData Da
     }
     Uint8_t_Array_Type empty;
     return empty;
-}
-
-static bool operator!=(const ConfigData Data1, const ConfigData Data2){
-    return!(Data1==Data2);
 }
 
 //Guardar un único valor en la eeprom
@@ -86,9 +81,9 @@ void ConfigLoop(void *pvParameters){
             Store(cambiado);
         }
 
-        Uint8_t_Array_Type cambiado = check_uint8_array(OldConfig, Configuracion);
-        if(cambiado.Value != 0 && cambiado.Direction != 0){
-            Store(cambiado);
+        Uint8_t_Array_Type array_cambiado = check_uint8_array(OldConfig, Configuracion);
+        if(array_cambiado.Value != 0 && array_cambiado.Direction != 0){
+            Store(array_cambiado);
         }
 
         OldConfig = Configuracion;
