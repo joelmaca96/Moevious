@@ -15,7 +15,7 @@ void ControlTask (void *pvParameters);
 void setup() {
 
   Serial.begin(9600);
-  
+
   OjosDelante.direccionEcho = 1;
   OjosDelante.direccionTrig = 2;
   OjosDetras.direccionEcho  = 3;
@@ -23,8 +23,6 @@ void setup() {
 
   //Arrancar el sistema de configuracion y leer la configuracion inicial
   InitConfiguration();
-
-  escribe(Configuracion.fw_version.Value);
 
   // Crear las tareas de lectura de sensores
   xTaskCreate(TaskUltrasonicRead,"OjosDelante",128,(void*)&OjosDelante,ULTRASONIC_PRIORITY,NULL); 
@@ -53,12 +51,7 @@ void loop(){
 void ControlTask (void *pvParameters){
   motors.MoverRecto(255, 1);
   for(;;){
-    
-    Serial.println("Ojos Delante");
-    Serial.println(OjosDelante.distancia);
-    Serial.println("Ojos Detras");
-    Serial.println(OjosDetras.distancia);
-    
+       
     duerme(500);
   }
 }

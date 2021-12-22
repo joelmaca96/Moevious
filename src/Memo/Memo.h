@@ -4,7 +4,8 @@
 #include "../tipos.h"
 #include "Arduino.h"
 #include "EEPROM.h"
-
+#include <Arduino_FreeRTOS.h>
 
 void InitConfiguration();
+
 #endif

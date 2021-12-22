@@ -5,18 +5,10 @@ extern ConfigData Configuracion;
 //Funciones privadas
 Uint8_t_Type check_uint8(const ConfigData Data1, const ConfigData Data2){
     if(Data1.fw_version.Value != Data2.fw_version.Value){
+        
         return Data2.fw_version;
     }
     Uint8_t_Type empty;
-    return empty;
-}
-
-Uint8_t_Array_Type check_uint8_array(const ConfigData Data1, const ConfigData Data2){
-
-    if(memcmp(Data1.name.Value,Data2.name.Value, Data2.name.size)){
-        return Data2.name;
-    }
-    Uint8_t_Array_Type empty;
     return empty;
 }
 
@@ -31,20 +23,6 @@ void Store(Uint8_t_Type data){
     EEPROM.write(data.Direction, data.Value);
 }
 
-//Guardar un array en la eeprom
-void Store(Uint8_t_Array_Type data){
-    if (data.Direction >= EEPROM.length()){
-        #ifdef DEBUG_ERRORS
-        printf("Error en el almacenado en configuracion. Direccion = %i\n", data.Direction);
-        #endif
-        return;
-    }
-    EEPROM.write(data.Direction, data.size);
-    for(uint8_t size=1;size < data.size;size++){
-        EEPROM.write(data.Direction + size, data.Value[size-1]);
-    }
-}
-
 //Leer un único valor desde la eeprom
 void Read(Uint8_t_Type *data){
     if (data->Direction >= EEPROM.length()){
@@ -56,39 +34,49 @@ void Read(Uint8_t_Type *data){
     data->Value = EEPROM.read(data->Direction);
 }
 
-//Leer un array desde la eeprom
-void Read(Uint8_t_Array_Type *data){
-    if (data->Direction >= EEPROM.length()){
-        #ifdef DEBUG_ERRORS
-        printf("Error en la lectura en configuracion. Direccion = %i\n", data->Direction);
-        #endif
-        return;
-    }
-
-    data->size = EEPROM.read(data->Direction);
-    for(uint8_t size=1;size < data->size;size++){
-        data->Value[size-1] = EEPROM.read(data->Direction+ size);
-    }
+//Limpiar la eemprom
+void clear_eeprom(){
+   for (int E = 0; E < EEPROM.length(); E++){
+    EEPROM.write(E, 0);   // Itera por toda la EEPROM y reemplaza cualquier valor que esté en algún byte por cero
+  }
 }
 
 //Tarea para el almacenado automatico de la configuracion
-void ConfigLoop(void *pvParameters){
+void ConfigLoop(void *p){
+
     ConfigData OldConfig = Configuracion;
 
+    //Comprobar si ya se ha almacenado algo alguna vez
+    //sino almacenar valores por defecto
+    Read(&Configuracion.fw_version);
+
+    escribe("Version de firmware actual:");
+    escribe(Configuracion.fw_version.Value);
+
+
+    if(Configuracion.fw_version.Value == 0 || Configuracion.fw_version.Value == 255){
+        escribe("La eeprom no esta arrancada, inicializando...");
+        Configuracion.fw_version.Value = 1;
+    }
+
+    //Leer el resto de valores
+    else{
+        OldConfig = Configuracion;
+    }
+
+    //Bucle para las comprobaciones
     for(;;){
+
         Uint8_t_Type cambiado = check_uint8(OldConfig, Configuracion);
-        if(cambiado.Value != 0 && cambiado.Direction != 0){
+        if(cambiado.Direction != 255){
+            escribe("Guardando datos!\n");
             Store(cambiado);
         }
 
-        Uint8_t_Array_Type array_cambiado = check_uint8_array(OldConfig, Configuracion);
-        if(array_cambiado.Value != 0 && array_cambiado.Direction != 0){
-            Store(array_cambiado);
-        }
-
         OldConfig = Configuracion;
-        duerme(500);
+        duerme(100);
     }
+    vTaskDelete(NULL);
 }
 
 //Funciones publicas
@@ -100,28 +88,15 @@ void ConfigLoop(void *pvParameters){
  ****************************************************************/
 void InitConfiguration(){
 
+    //clear_eeprom();
+
     //Iniciar las direcciones fijas de la memoria
-    Configuracion.fw_version.Direction = 0;
-    Configuracion.name.Direction = 0;
+    Configuracion.fw_version.Direction = 1;
+
 
     //Arrancar la tarea de control de cambios en la configuracion
-    xTaskCreate(ConfigLoop, "CONFIG_TASK", 256, NULL, CONFIG_PRIORITY, NULL );
+    TaskHandle_t handle;
+    
+    xTaskCreate(ConfigLoop, "CFGTASK", 128, NULL, CONFIG_PRIORITY, &handle);
 
-    //Comprobar si ya se ha almacenado algo alguna vez
-    //sino almacenar valores por defecto
-    Read(&Configuracion.fw_version);
-
-    if(Configuracion.fw_version.Value == 0 || Configuracion.fw_version.Value == 255){
-        escribe("La eeprom no esta arrancada, inicializando... \n");
-        Configuracion.fw_version.Value = 1;
-        memcpy(Configuracion.name.Value, "Moevious1", 10);
-    }
-
-    //Leer el resto de valores
-    else{
-        Read(&Configuracion.name);
-    }
-
-    escribe(Configuracion.fw_version.Value);
-    escribe((char*)Configuracion.name.Value);
 }

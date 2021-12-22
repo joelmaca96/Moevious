@@ -14,8 +14,8 @@
 /*--------------------------------------------------*/
 
 
-#define DEBUG          //Control de todo el output por el puerto serial
-#define DEBUG_ERRORS   //Control de errores por el puerto serial
+#define DEBUG          1//Control de todo el output por el puerto serial
+#define DEBUG_ERRORS   2//Control de errores por el puerto serial
 
 //Cponfiguracion de las prioridades de las tareas
 
@@ -66,7 +66,7 @@ Tipo de datos para el almacenado en la memoria
 */
 typedef struct Uint8_t_Type{
     uint8_t Value = 0;
-    uint8_t Direction = 0;
+    uint8_t Direction = 255;
 }Uint8_t_Type;
 
 /*Uint8_t_Array_Type
@@ -74,7 +74,7 @@ Tipo de datos para el almacenado en la memoria
 */
 typedef struct Uint8_t_Array_Type{
     uint8_t *Value = 0;
-    uint8_t Direction = 0;
+    uint8_t Direction = 255;
     uint8_t size = 0;
 }Uint8_t_Array_Type;
 

@@ -89,7 +89,7 @@ void escribe(uint32_t value){
 void escribe(String value){
   #ifdef DEBUG
     if ( xSerialSemaphore == NULL )start_semaphore();
-    if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
+    if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 20 ) == pdTRUE ){
       Serial.println(value);
       xSemaphoreGive( xSerialSemaphore );
     }
@@ -106,7 +106,7 @@ void escribe(String value){
 void escribe(float value){
   #ifdef DEBUG
     if ( xSerialSemaphore == NULL )start_semaphore();
-    if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
+    if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 20 ) == pdTRUE ){
       Serial.println(value);
       xSemaphoreGive( xSerialSemaphore );
     }

@@ -48,7 +48,6 @@ void TaskReadDigital( void *pvParameters){
  ****************************************************************/
 void TaskUltrasonicRead (void *pvParameters){
     SensorU_t * sensor = (SensorU_t *) pvParameters;
-
     for (;;){
         //Limpiar el estado del sensor
         digitalWrite(sensor->direccionTrig, LOW);
