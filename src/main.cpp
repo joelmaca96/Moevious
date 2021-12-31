@@ -21,6 +21,7 @@ void setup() {
   OjosDetras.direccionEcho  = 5;
   OjosDetras.direccionTrig  = 4;
 
+    OjosDetras.cadencia = 100;
   //Arrancar el sistema de configuracion y leer la configuracion inicial
   InitConfiguration();
 
@@ -51,11 +52,7 @@ void loop(){
 void ControlTask (void *pvParameters){
   //motors.MoverRecto(255, 1);
   for(;;){
-    
-    Serial.println("Ojos Delante");
-    Serial.println(OjosDelante.distancia);
-    Serial.println("Ojos Detras");
-    Serial.println(OjosDetras.distancia);
+        Serial.println(OjosDetras.distancia);
     
     duerme(500);
   }

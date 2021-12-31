@@ -14,4 +14,6 @@ void escribe(float value);
 void escribe(String value);
 
 
+void FIFO(uint32_t * values, uint32_t new_value);
+
 #endif

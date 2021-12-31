@@ -56,6 +56,8 @@ typedef struct SensorU_t{
     uint8_t  direccionEcho;
     uint16_t cadencia = 500;
     uint32_t distancia;
+
+    uint32_t distancias[10] = {0};
 } SensorU_t;
 
 
@@ -84,7 +86,6 @@ Estructura para los valores de configuracion
 */
 typedef struct ConfigData{
     Uint8_t_Type        fw_version;
-    Uint8_t_Array_Type  name;
 }ConfigData;
 
 #endif
