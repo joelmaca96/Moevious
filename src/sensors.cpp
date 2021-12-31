@@ -42,12 +42,12 @@ void TaskReadDigital( void *pvParameters){
 /****************************************************************
  * Función TaskUltrasonicRead
  * Funcion pensada para ejecutarse como tarea.
- * Lee un sensor de ultrasonidos HC-SR04
+ * Lee un sensor de ultrasonidos HC-SR04 y almacena la distancia en 
+ * la estructura que se le pasa como parametro
  * params: SensorU_t --> Estructura del sensor a leer
  ****************************************************************/
 void TaskUltrasonicRead (void *pvParameters){
     SensorU_t * sensor = (SensorU_t *) pvParameters;
-
     for (;;){
         //Limpiar el estado del sensor
         digitalWrite(sensor->direccionTrig, LOW);

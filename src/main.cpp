@@ -1,13 +1,13 @@
 #include "tipos.h"
 
-// Semaforo para que dos tareas no accedan al serial a la vez
-SemaphoreHandle_t xSerialSemaphore;
-
 //Declarar los objetos de los sensores
 SensorU_t OjosDelante, OjosDetras;
 
 //Declarar la clase de los motores
 Motores motors;
+
+//Declarar el objeto para la configuracion
+ConfigData Configuracion;
 
 // Prototipos de funciones
 void ControlTask (void *pvParameters);
@@ -21,22 +21,21 @@ void setup() {
   OjosDetras.direccionEcho  = 5;
   OjosDetras.direccionTrig  = 4;
 
-  //Arrancar el semaforo
-  if ( xSerialSemaphore == NULL ){
-    xSerialSemaphore = xSemaphoreCreateMutex();
-    if ( ( xSerialSemaphore ) != NULL )
-      xSemaphoreGive( ( xSerialSemaphore ) );  
-  }
+  //Arrancar el sistema de configuracion y leer la configuracion inicial
+  InitConfiguration();
 
   // Crear las tareas de lectura de sensores
-  xTaskCreate(TaskUltrasonicRead,"OjosDelante",128,(void*)&OjosDelante,2,NULL); 
-  xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,3,NULL); 
+  xTaskCreate(TaskUltrasonicRead,"OjosDelante",128,(void*)&OjosDelante,ULTRASONIC_PRIORITY,NULL); 
+  xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,ULTRASONIC_PRIORITY,NULL); 
 
   //Crear la tarea de control principal
-  xTaskCreate(ControlTask,"Control",256,(void*)&ControlTask,3,NULL); 
+  xTaskCreate(ControlTask,"Control",256,NULL,CONTROL_PRIORITY,NULL); 
 }
 
 void loop(){
+
+  //En este proyecto el bucle loop no se utiliza
+  //Es sustituido por la tarea del RTOS "ControlTask"
 }
 
 /*--------------------------------------------------*/

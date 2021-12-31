@@ -1,7 +1,28 @@
 #include "helpers.h"
 
+#ifdef DEBUG
+// Semaforo para que dos tareas no accedan al serial a la vez
+SemaphoreHandle_t xSerialSemaphore;
+#endif
 
-extern SemaphoreHandle_t xSerialSemaphore;
+/*--------------------------------------------------*/
+/*-------------- Funciones privadas ----------------*/
+/*--------------------------------------------------*/
+
+void start_semaphore(){
+  #ifdef DEBUG
+  //Arrancar el semaforo
+  if ( xSerialSemaphore == NULL ){
+    xSerialSemaphore = xSemaphoreCreateMutex();
+    if ( ( xSerialSemaphore ) != NULL )
+      xSemaphoreGive( ( xSerialSemaphore ) );  
+  }
+  #endif
+}
+
+/*--------------------------------------------------*/
+/*-------------- Funciones publicas ----------------*/
+/*--------------------------------------------------*/
 
 /****************************************************************
  * Función duerme
@@ -15,57 +36,79 @@ void duerme (int ms){
 
 /****************************************************************
  * Función escribe
- * Escribe por el puerto seriañ esperando que ninguna otra tarea
- * esté utilzando el puerto
+ * Escribe por el puerto serial esperando que ninguna otra tarea
+ * esté utilzando el puerto. Si tras 5 milisegundos el puerto no
+ * queda libre, vuelve sin escribir. 
  * params: value(int) --> valor a printar
  ****************************************************************/
 void escribe(int value){
+  #ifdef DEBUG
+    if ( xSerialSemaphore == NULL )start_semaphore();
     if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
       Serial.println(value);
       xSemaphoreGive( xSerialSemaphore );
     }
+  #endif
 }
 void escribe(uint8_t value){
+  #ifdef DEBUG
+    if ( xSerialSemaphore == NULL )start_semaphore();
     if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
       Serial.println(value);
       xSemaphoreGive( xSerialSemaphore );
     }
+  #endif
 }
 void escribe(uint16_t value){
+  #ifdef DEBUG
+    if ( xSerialSemaphore == NULL )start_semaphore();
     if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
       Serial.println(value);
       xSemaphoreGive( xSerialSemaphore );
     }
+  #endif
 }
 void escribe(uint32_t value){
+  #ifdef DEBUG
+    if ( xSerialSemaphore == NULL )start_semaphore();
     if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
       Serial.println(value);
       xSemaphoreGive( xSerialSemaphore );
     }
+  #endif
 }
+
 
 /****************************************************************
  * Función escribe
- * Escribe por el puerto seriañ esperando que ninguna otra tarea
- * esté utilzando el puerto
- * params: value(String) --> cadena de texto a printar
+ * Escribe por el puerto serial esperando que ninguna otra tarea
+ * esté utilzando el puerto. Si tras 5 milisegundos el puerto no
+ * queda libre, vuelve sin escribir. 
+ * params: value(String) --> Cadena de texto a printar
  ****************************************************************/
 void escribe(String value){
-    if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
+  #ifdef DEBUG
+    if ( xSerialSemaphore == NULL )start_semaphore();
+    if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 20 ) == pdTRUE ){
       Serial.println(value);
       xSemaphoreGive( xSerialSemaphore );
     }
+  #endif
 }
 
 /****************************************************************
  * Función escribe
- * Escribe por el puerto seriañ esperando que ninguna otra tarea
- * esté utilzando el puerto
- * params: value(float) --> Valor com coma a printar
+ * Escribe por el puerto serial esperando que ninguna otra tarea
+ * esté utilzando el puerto. Si tras 5 milisegundos el puerto no
+ * queda libre, vuelve sin escribir. 
+ * params: value(float) --> Numero de coma flotante a printar
  ****************************************************************/
 void escribe(float value){
-    if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 5 ) == pdTRUE ){
+  #ifdef DEBUG
+    if ( xSerialSemaphore == NULL )start_semaphore();
+    if ( xSemaphoreTake( xSerialSemaphore, ( TickType_t ) 20 ) == pdTRUE ){
       Serial.println(value);
       xSemaphoreGive( xSerialSemaphore );
     }
+  #endif
 }
