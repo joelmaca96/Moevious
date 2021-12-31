@@ -16,9 +16,9 @@ void setup() {
 
   Serial.begin(9600);
   
-  OjosDelante.direccionEcho = 1;
-  OjosDelante.direccionTrig = 2;
-  OjosDetras.direccionEcho  = 3;
+  OjosDelante.direccionEcho = 6;
+  OjosDelante.direccionTrig = 7;
+  OjosDetras.direccionEcho  = 5;
   OjosDetras.direccionTrig  = 4;
 
   //Arrancar el semaforo
@@ -50,7 +50,7 @@ void loop(){
  * params: Ninguno
  ****************************************************************/
 void ControlTask (void *pvParameters){
-  motors.MoverRecto(255, 1);
+  //motors.MoverRecto(255, 1);
   for(;;){
     
     Serial.println("Ojos Delante");
@@ -58,7 +58,7 @@ void ControlTask (void *pvParameters){
     Serial.println("Ojos Detras");
     Serial.println(OjosDetras.distancia);
     
-    duerme(100);
+    duerme(500);
   }
 }
 
