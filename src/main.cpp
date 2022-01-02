@@ -9,6 +9,9 @@ Motores motors;
 //Declarar el objeto para la configuracion
 ConfigData Configuracion;
 
+//Objeto para el zumbador
+beep pitido;
+
 // Prototipos de funciones
 void ControlTask (void *pvParameters);
 
@@ -31,6 +34,8 @@ void setup() {
 
   //Crear la tarea de control principal
   xTaskCreate(ControlTask,"Control",256,NULL,CONTROL_PRIORITY,NULL); 
+
+  pitido.init();
 }
 
 void loop(){

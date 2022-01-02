@@ -8,6 +8,7 @@
 #include <semphr.h> 
 #include "motors.h"
 #include "Memo/Memo.h"
+#include "actuators/beep.h"
 
 /*--------------------------------------------------*/
 /*----------- Defines de configuracion -------------*/
