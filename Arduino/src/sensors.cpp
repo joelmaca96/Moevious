@@ -48,6 +48,9 @@ void TaskReadDigital( void *pvParameters){
  ****************************************************************/
 void TaskUltrasonicRead (void *pvParameters){
     SensorU_t * sensor = (SensorU_t *) pvParameters;
+
+    pinMode(sensor->direccionTrig, OUTPUT);
+    pinMode(sensor->direccionEcho, INPUT);
     
     for (;;){
         //Limpiar el estado del sensor
@@ -83,10 +86,9 @@ void TaskUltrasonicRead (void *pvParameters){
           diferencia_sup = abs(sensor->distancias[index]-sensor->distancias[index+limit_sup]);
           diferencia_inf = abs(sensor->distancias[index]-sensor->distancias[index-limit_inf]);
 
-          if(diferencia_inf > 1000 && diferencia_sup > 1000){
+          if(diferencia_inf > 400 && diferencia_sup > 400){
             pesos[index] = 0;
           }
-
         }
 
 

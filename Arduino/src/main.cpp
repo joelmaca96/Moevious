@@ -1,7 +1,7 @@
 #include "tipos.h"
 
 //Declarar los objetos de los sensores
-SensorU_t OjosDelante, OjosDetras;
+SensorU_t OjosDetras;
 
 //Declarar la clase de los motores
 Motores motors;
@@ -9,8 +9,8 @@ Motores motors;
 //Declarar el objeto para la configuracion
 ConfigData Configuracion;
 
-//Objeto para el zumbador
-beep pitido;
+// Estructura para almacenar el estado del robot
+Status_t Status;
 
 // Prototipos de funciones
 void ControlTask (void *pvParameters);
@@ -19,10 +19,8 @@ void setup() {
 
   Serial.begin(9600);
   
-  OjosDelante.direccionEcho = 6;
-  OjosDelante.direccionTrig = 7;
-  OjosDetras.direccionEcho  = 5;
-  OjosDetras.direccionTrig  = 4;
+  OjosDetras.direccionEcho  = echo_rear;
+  OjosDetras.direccionTrig  = trig_rear;
 
   OjosDetras.cadencia = 100;
   //Arrancar el sistema de configuracion y leer la configuracion inicial
@@ -30,12 +28,10 @@ void setup() {
 
   // Crear las tareas de lectura de sensores
   //xTaskCreate(TaskUltrasonicRead,"OjosDelante",128,(void*)&OjosDelante,ULTRASONIC_PRIORITY,NULL); 
-  //xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,ULTRASONIC_PRIORITY,NULL); 
 
   //Crear la tarea de control principal
   xTaskCreate(ControlTask,"Control",256,NULL,CONTROL_PRIORITY,NULL); 
 
-  pitido.init();
 }
 
 void loop(){
@@ -55,9 +51,36 @@ void loop(){
  * \param Ninguno
  ****************************************************************/
 void ControlTask (void *pvParameters){
-  motors.VelocidadMotor(DERECHA, 255, ATRAS);
+
+  TaskHandle_t OjosDetras_h = NULL;
+  motors.MoverRecto(255, ALANTE);
+  uint8_t count = 0;
   for(;;){
-        //Serial.println(OjosDetras.distancia);
+    
+    if(++count > 10 && count < 40){
+      motors.MoverRecto(255, ATRAS);
+    }
+    else if (count == 41){
+      motors.MoverRecto(255, ALANTE);
+    }
+
+    if(Status.direccion == ATRAS){
+
+      //Si vamos hacia atrás, hacer caso del sensor trasero
+      if(OjosDetras_h == NULL){
+          xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,ULTRASONIC_PRIORITY,&OjosDetras_h); 
+      }
+      if(OjosDetras.distancia < 4){
+        count = 40;
+      }
+    }
+    else{ //Cuando dejemos de ir hacia atrás eliminamos el sensor trasero
+      if(OjosDetras_h != NULL){
+        vTaskDelete(OjosDetras_h);
+        OjosDetras_h = NULL;
+      }
+    }
+    
     
     duerme(500);
   }

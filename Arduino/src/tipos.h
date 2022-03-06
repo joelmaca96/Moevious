@@ -4,6 +4,7 @@
 #include "helpers.h"
 #include "sensors.h"
 #include "Arduino.h"
+#include "PinOut.h"
 #include <Arduino_FreeRTOS.h>
 #include <semphr.h> 
 #include "motors.h"
@@ -18,11 +19,11 @@
 #define DEBUG          1//Control de todo el output por el puerto serial
 #define DEBUG_ERRORS   2//Control de errores por el puerto serial
 
-//Cponfiguracion de las prioridades de las tareas
+//Configuracion de las prioridades de las tareas
 
 #define ULTRASONIC_PRIORITY 3
 #define CONFIG_PRIORITY     4
-#define CONTROL_PRIORITY    3
+#define CONTROL_PRIORITY    2
 
 /*--------------------------------------------------*/
 /*------------- Estructuras de datos ---------------*/
@@ -88,5 +89,21 @@ Estructura para los valores de configuracion
 typedef struct ConfigData{
     Uint8_t_Type        fw_version;
 }ConfigData;
+
+/*Status
+Estructura con el estado actual de Moevious
+*/
+typedef struct Status{
+    bool     direccion = 0;
+    uint8_t  speed = 0;
+}Status_t;
+
+
+/*--------------------------------------------------*/
+/*-------------- Variables globales ----------------*/
+/*--------------------------------------------------*/
+//Estado del robot
+extern Status_t Status;
+
 
 #endif

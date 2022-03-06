@@ -4,13 +4,6 @@
 #include "tipos.h"
 #include "Arduino.h"
 
-#define izda_brake  8
-#define dcha_brake  9
-#define izda_dir   12
-#define dcha_dir   13
-#define izda_vel   11
-#define dcha_vel    3
-
 #define IZQUIERDA 1
 #define DERECHA   2
 

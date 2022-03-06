@@ -112,7 +112,10 @@ void Motores::MoverRecto(uint8_t Speed, bool Direccion){
     digitalWrite(izda_dir, !Direccion); 
     digitalWrite(dcha_dir, Direccion);  
     analogWrite(izda_vel, Speed);  
-    analogWrite(dcha_vel, Speed);    
+    analogWrite(dcha_vel, Speed);  
+
+    Status.direccion = Direccion;
+    Status.speed = Speed;  
 }
 
 
