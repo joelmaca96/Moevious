@@ -84,7 +84,7 @@ void ConfigLoop(void *p){
 /****************************************************************
  * Función InitConfoguration
  * Lee la configuracion inicial y arranca la tarea de configuracion
- * params: NULL
+ * \param NULL
  ****************************************************************/
 void InitConfiguration(){
 

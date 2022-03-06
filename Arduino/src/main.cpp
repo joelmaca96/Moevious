@@ -24,13 +24,13 @@ void setup() {
   OjosDetras.direccionEcho  = 5;
   OjosDetras.direccionTrig  = 4;
 
-    OjosDetras.cadencia = 100;
+  OjosDetras.cadencia = 100;
   //Arrancar el sistema de configuracion y leer la configuracion inicial
   InitConfiguration();
 
   // Crear las tareas de lectura de sensores
-  xTaskCreate(TaskUltrasonicRead,"OjosDelante",128,(void*)&OjosDelante,ULTRASONIC_PRIORITY,NULL); 
-  xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,ULTRASONIC_PRIORITY,NULL); 
+  //xTaskCreate(TaskUltrasonicRead,"OjosDelante",128,(void*)&OjosDelante,ULTRASONIC_PRIORITY,NULL); 
+  //xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,ULTRASONIC_PRIORITY,NULL); 
 
   //Crear la tarea de control principal
   xTaskCreate(ControlTask,"Control",256,NULL,CONTROL_PRIORITY,NULL); 
@@ -52,12 +52,12 @@ void loop(){
  * Función ControlTask
  * Funcion pensada para ejecutarse como tarea.
  * Tarea de control principal de Moevious 
- * params: Ninguno
+ * \param Ninguno
  ****************************************************************/
 void ControlTask (void *pvParameters){
-  //motors.MoverRecto(255, 1);
+  motors.VelocidadMotor(DERECHA, 255, ATRAS);
   for(;;){
-        Serial.println(OjosDetras.distancia);
+        //Serial.println(OjosDetras.distancia);
     
     duerme(500);
   }

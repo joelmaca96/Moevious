@@ -4,7 +4,7 @@
  * Función TaskReadAnalog
  * Funcion pensada para ejecutarse como tarea.
  * Lee un sensor analogico y guarda su valor en la estructura.
- * params: Sensor_t --> Estructura del sensor a leer
+ * \param Sensor_t --> Estructura del sensor a leer
  ****************************************************************/
 void TaskReadAnalog( void *pvParameters){
   SensorA_t * sensor = (SensorA_t *) pvParameters;
@@ -22,7 +22,7 @@ void TaskReadAnalog( void *pvParameters){
  * Función TaskReadDigital
  * Funcion pensada para ejecutarse como tarea.
  * Lee un sensor digital y guarda su valor en la estructura.
- * params: SensorD_t --> Estructura del sensor a leer
+ * \param SensorD_t --> Estructura del sensor a leer
  ****************************************************************/
 void TaskReadDigital( void *pvParameters){
   SensorD_t * sensor = (SensorD_t *) pvParameters;
@@ -44,7 +44,7 @@ void TaskReadDigital( void *pvParameters){
  * Funcion pensada para ejecutarse como tarea.
  * Lee un sensor de ultrasonidos HC-SR04 y almacena la distancia en 
  * la estructura que se le pasa como parametro
- * params: SensorU_t --> Estructura del sensor a leer
+ * \param SensorU_t --> Estructura del sensor a leer
  ****************************************************************/
 void TaskUltrasonicRead (void *pvParameters){
     SensorU_t * sensor = (SensorU_t *) pvParameters;
