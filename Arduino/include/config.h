@@ -10,11 +10,13 @@
 #define DEBUG_ERRORS   (1) //Control de errores por el puerto serial
 
 #if DEBUG
-    #define DEBUG_MEMO (1) //Control de mensajes de diagnostico de la libreria memo
+    #define DEBUG_MEMO   (1) //Control de mensajes de diagnostico de la libreria memo
+    #define DEBUG_MOTORS (1) //Control de mensajes de diagnostico del sistema de control de motorres
 #endif
 
 #if DEBUG_ERRORS
-    #define DEBUG_MEMO_ERRORS (1) //Control de mensajes de error de la libreria memo
+    #define DEBUG_MEMO_ERRORS  (1) //Control de mensajes de error de la libreria memo
+    #define DEBUG_MOTOR_ERRORS (1) //Control de mensajes de error del sistema de control de motores
 #endif
 
 //Configuracion de las prioridades de las tareas

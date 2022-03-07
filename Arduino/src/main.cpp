@@ -13,9 +13,13 @@ ConfigData Configuracion;
 Status_t Status;
 
 // Prototipos de funciones
+
+
 void ControlTask (void *pvParameters);
 
 void setup() {
+  //Frenado inicial para evitar movimientos no deseados en el arranque
+  motors.Frenar();
 
   Serial.begin(9600);
   
@@ -46,32 +50,31 @@ void loop(){
 
 /****************************************************************
  * Función ControlTask
- * Funcion pensada para ejecutarse como tarea.
- * Tarea de control principal de Moevious 
- * \param Ninguno
+ * \brief Tarea de control principal de Moevious 
+ * \param void *pvParameters -> puntero a array de parametros
+ * \return void
  ****************************************************************/
 void ControlTask (void *pvParameters){
 
   TaskHandle_t OjosDetras_h = NULL;
+
   motors.MoverRecto(255, ALANTE);
   uint8_t count = 0;
   for(;;){
     
-    if(++count > 10 && count < 40){
+    if(++count == 50){
       motors.MoverRecto(255, ATRAS);
-    }
-    else if (count == 41){
-      motors.MoverRecto(255, ALANTE);
     }
 
     if(Status.direccion == ATRAS){
 
       //Si vamos hacia atrás, hacer caso del sensor trasero
       if(OjosDetras_h == NULL){
-          xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,ULTRASONIC_PRIORITY,&OjosDetras_h); 
+        xTaskCreate(TaskUltrasonicRead,"OjosDetras",128,(void*)&OjosDetras,ULTRASONIC_PRIORITY,&OjosDetras_h); 
       }
       if(OjosDetras.distancia < 4){
-        count = 40;
+        motors.MoverRecto(255, ALANTE);
+        count = 0;
       }
     }
     else{ //Cuando dejemos de ir hacia atrás eliminamos el sensor trasero
@@ -82,7 +85,7 @@ void ControlTask (void *pvParameters){
     }
     
     
-    duerme(500);
+    duerme(100);
   }
 }
 

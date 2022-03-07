@@ -18,6 +18,7 @@ Motores::Motores(){
  * Función Frenar
  * \brief Frenar los dos motores a la vez.
  * Aplica nivel de voltaje alto en los pines digitales de los frenos
+ * \return void
  ****************************************************************/
 void Motores::Frenar(){
     analogWrite(izda_vel, 0);  
@@ -29,6 +30,7 @@ void Motores::Frenar(){
  * Función FrenarIzda
  * \brief Frenar el motor Izquierdo
  * Aplica nivel de voltaje alto en los pines digitales de los frenos
+ * \return void
  ****************************************************************/
 void Motores::FrenarIzda(){
     digitalWrite(izda_brake, HIGH); 
@@ -37,6 +39,7 @@ void Motores::FrenarIzda(){
  * Función FrenarIzda
  * \brief Frenar el motor Derecho
  * Aplica nivel de voltaje alto en los pines digitales de los frenos
+ * \return void
  ****************************************************************/
 void Motores::FrenarDcha(){
     digitalWrite(dcha_brake, HIGH);  
@@ -47,6 +50,7 @@ void Motores::FrenarDcha(){
  * Función QuitarFreno
  * \brief Quitar el freno a los dos motores a la vez.
  * Aplica nivel de voltaje bajo en los pines digitales de los frenos
+ * \return void
  ****************************************************************/
 void Motores::QuitarFreno(){
     QuitarFrenoIzda();
@@ -56,6 +60,7 @@ void Motores::QuitarFreno(){
  * Función QuitarFrenoIzda
  * \brief Quitar el freno al motor Izquierdo
  * Aplica nivel de voltaje bajo en los pines digitales de los frenos
+ * \return void
  ****************************************************************/
 void Motores::QuitarFrenoIzda(){
     digitalWrite(izda_brake, LOW); 
@@ -64,6 +69,7 @@ void Motores::QuitarFrenoIzda(){
  * Función QuitarFrenoDcha
  * \brief Quitar el freno al motor derecho.
  * Aplica nivel de voltaje bajo en los pines digitales de los frenos
+ * \return void
  ****************************************************************/
 void Motores::QuitarFrenoDcha(){
     digitalWrite(dcha_brake, LOW); 
@@ -75,8 +81,15 @@ void Motores::QuitarFrenoDcha(){
  * \param uint8_t Motor --> Identificador del motor a mover
  * \param uint8_t Speed --> Velocidad a la que irá el robot (0-255)
  * \param bool  Direccion --> direccion en la que se moverá
+ * \return void
  ****************************************************************/
 void Motores::VelocidadMotor(uint8_t Motor, uint8_t Speed, bool Direccion){
+    if(Speed > 255){
+        #if DEBUG_MOTOR_ERRORS
+            printf("Error en la velocidad enviada [%i]\n", Speed);
+        #endif
+        return;
+    }
     if(Motor == IZQUIERDA){
         if(Speed > 0){ //Mandar un 0 como velocidad es lo mismo que frenar
             QuitarFrenoIzda();
@@ -88,7 +101,7 @@ void Motores::VelocidadMotor(uint8_t Motor, uint8_t Speed, bool Direccion){
         }
         
     }
-    else{
+    else if(Motor == DERECHA){
         if(Speed > 0){
             QuitarFrenoDcha();
             digitalWrite(dcha_dir, Direccion);  
@@ -98,6 +111,11 @@ void Motores::VelocidadMotor(uint8_t Motor, uint8_t Speed, bool Direccion){
             FrenarDcha();
         }
     }
+    else{
+        #if DEBUG_MOTOR_ERRORS
+            printf("Error en el motor seleccionado [%i]\n", Motor);
+        #endif
+    }
 }
 
 /****************************************************************
@@ -105,6 +123,7 @@ void Motores::VelocidadMotor(uint8_t Motor, uint8_t Speed, bool Direccion){
  * \brief Mueve los dos motores para que el robot vaya recto
  * \param uint8_t Speed --> Velocidad a la que irá el robot (0-255)
  * \param bool  Direccion --> direccion en la que se moverá
+ * \return void
  ****************************************************************/
 void Motores::MoverRecto(uint8_t Speed, bool Direccion){
     QuitarFreno();

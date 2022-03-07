@@ -19,7 +19,7 @@ void duerme (int ms){
  * \brief coje un array de valores y lo trata como un FIFO, es decir, 
  * el valor que le pasamos lo añade al principio y borra el ultimo
  * \param values(uint32_t*) --> Cola FIFO
- *         new_value(uint32_t) --> numero a añadir al fifo
+ * \param new_value(uint32_t) --> numero a añadir al fifo
  ****************************************************************/
 void FIFO(uint32_t * values, uint32_t new_value){
     size_t tamaino = sizeof(values);

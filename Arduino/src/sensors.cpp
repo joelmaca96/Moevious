@@ -3,8 +3,9 @@
 /****************************************************************
  * Función TaskReadAnalog
  * Funcion pensada para ejecutarse como tarea.
- * Lee un sensor analogico y guarda su valor en la estructura.
- * \param Sensor_t --> Estructura del sensor a leer
+ * \brief Lee un sensor analogico y guarda su valor en la estructura.
+ * \param Sensor_t --> Estructura del sensor analogico a leer
+ * \return void
  ****************************************************************/
 void TaskReadAnalog( void *pvParameters){
   SensorA_t * sensor = (SensorA_t *) pvParameters;
@@ -21,8 +22,9 @@ void TaskReadAnalog( void *pvParameters){
 /****************************************************************
  * Función TaskReadDigital
  * Funcion pensada para ejecutarse como tarea.
- * Lee un sensor digital y guarda su valor en la estructura.
+ * \brief Lee un sensor digital y guarda su valor en la estructura.
  * \param SensorD_t --> Estructura del sensor a leer
+ * \return void
  ****************************************************************/
 void TaskReadDigital( void *pvParameters){
   SensorD_t * sensor = (SensorD_t *) pvParameters;
@@ -42,9 +44,10 @@ void TaskReadDigital( void *pvParameters){
 /****************************************************************
  * Función TaskUltrasonicRead
  * Funcion pensada para ejecutarse como tarea.
- * Lee un sensor de ultrasonidos HC-SR04 y almacena la distancia en 
- * la estructura que se le pasa como parametro
+ * \brief Lee un sensor de ultrasonidos HC-SR04 y almacena la distancia en 
+ * la estructura que se le pasa como parametro.
  * \param SensorU_t --> Estructura del sensor a leer
+ * \return void
  ****************************************************************/
 void TaskUltrasonicRead (void *pvParameters){
     SensorU_t * sensor = (SensorU_t *) pvParameters;
@@ -71,9 +74,8 @@ void TaskUltrasonicRead (void *pvParameters){
         //Almacenar el ultimo valor en el fifo de distancias
         FIFO(sensor->distancias, distancia_temp);
 
-        //Para obtener la media de las ultimas 10 mediciones, se realiza una media ponderada, dando más
-        //importancia a las mediciones mas nuevas.
-        float pesos[10] = {1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1};
+        //Para obtener la media de las ultimas 10 mediciones, se realiza una media aritmetica
+        float pesos[10] = {1};
 
         //filtrar distancias incongruentes buscando diferencias demasiado grandes (mediciones incorrectas)
         //y asignandoles un peso 0 para conservar sus valores.
@@ -93,12 +95,13 @@ void TaskUltrasonicRead (void *pvParameters){
 
 
         //Calcular la media ponderada
-        float suma_pesos= 0;
+        uint8_t suma_pesos= 0;
         float suma_distancias = 0;
         for(uint8_t index = 0;index < 10;index++){
-          suma_pesos += pesos[index];
-          suma_distancias += sensor->distancias[index]*pesos[index];
-
+          if(pesos[index] != 0){
+            suma_pesos += pesos[index];
+            suma_distancias += sensor->distancias[index];
+          }
         }
 
         sensor->distancia = suma_distancias/suma_pesos;
