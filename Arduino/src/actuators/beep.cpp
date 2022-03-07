@@ -2,7 +2,6 @@
 
 void beep::init(){
     
-
     //sonidito de arranque
     analogWrite(_pin, 150);
     delay(200);

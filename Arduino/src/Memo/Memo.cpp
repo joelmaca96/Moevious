@@ -2,6 +2,21 @@
 
 extern ConfigData Configuracion;
 
+#if DEBUG_MEMO
+static String indexToString(uint8_t index){
+    switch (index)
+    {
+    case 1:
+        return "version de firmware";
+        break;
+    
+    default:
+        return "[index not found]";
+        break;
+    }
+}
+#endif
+
 //Funciones privadas
 Uint8_t_Type check_uint8(const ConfigData Data1, const ConfigData Data2){
     if(Data1.fw_version.Value != Data2.fw_version.Value){
@@ -15,8 +30,8 @@ Uint8_t_Type check_uint8(const ConfigData Data1, const ConfigData Data2){
 //Guardar un único valor en la eeprom
 void Store(Uint8_t_Type data){
     if (data.Direction >= EEPROM.length()){
-        #ifdef DEBUG_ERRORS
-        printf("Error en el almacenado en configuracion. Direccion = %i\n", data.Direction);
+        #if DEBUG_MEMO_ERRORS
+            printf("Error en el almacenado en configuracion. Direccion = %i\n", data.Direction);
         #endif
         return;
     }
@@ -26,8 +41,8 @@ void Store(Uint8_t_Type data){
 //Leer un único valor desde la eeprom
 void Read(Uint8_t_Type *data){
     if (data->Direction >= EEPROM.length()){
-        #ifdef DEBUG_ERRORS
-        printf("Error en la lectura en configuracion. Direccion = %i\n", data->Direction);
+        #if DEBUG_MEMO_ERRORS
+            printf("Error en la lectura en configuracion. Direccion = %i\n", data->Direction);
         #endif
         return;
     }
@@ -50,12 +65,11 @@ void ConfigLoop(void *p){
     //sino almacenar valores por defecto
     Read(&Configuracion.fw_version);
 
-    escribe("Version de firmware actual:");
-    escribe(Configuracion.fw_version.Value);
-
 
     if(Configuracion.fw_version.Value == 0 || Configuracion.fw_version.Value == 255){
-        escribe("La eeprom no esta arrancada, inicializando...");
+        #if DEBUG_MEMO
+            Serial.println("La eeprom no esta arrancada, inicializando...");
+        #endif
         Configuracion.fw_version.Value = 1;
     }
 
@@ -69,7 +83,9 @@ void ConfigLoop(void *p){
 
         Uint8_t_Type cambiado = check_uint8(OldConfig, Configuracion);
         if(cambiado.Direction != 255){
-            escribe("Guardando datos!\n");
+            #if DEBUG_MEMO
+                printf("Guardando el valor de configuración: %s \n", indexToString(cambiado.Direction));
+            #endif
             Store(cambiado);
         }
 
@@ -93,10 +109,7 @@ void InitConfiguration(){
     //Iniciar las direcciones fijas de la memoria
     Configuracion.fw_version.Direction = 1;
 
-
-    //Arrancar la tarea de control de cambios en la configuracion
-    TaskHandle_t handle;
-    
-    xTaskCreate(ConfigLoop, "CFGTASK", 128, NULL, CONFIG_PRIORITY, &handle);
+    //Arrancar la tarea de control de cambios en la configuracion   
+    xTaskCreate(ConfigLoop, "CFGTASK", 128, NULL, CONFIG_PRIORITY, NULL);
 
 }
